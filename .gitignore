@@ -1,0 +1,30 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Research data and generated model artifacts are intentionally not part of
+# this source-only release.
+data/
+cache/
+checkpoints/
+results/
+output/
+outputs/
+**/blinded_inputs/
+**/forecast_stage/
+**/forecasts/
+**/final_results/
+**/history_evaluation*/
+*.ckpt
+*.npy
+*.npz
+*.parquet
+*.pt
+*.pth
+*.zip
+*.log

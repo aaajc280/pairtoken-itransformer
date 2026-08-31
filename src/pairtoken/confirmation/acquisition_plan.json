@@ -1,0 +1,76 @@
+{
+  "schema": "pairtoken_1m_confirmation_acquisition_plan_v1",
+  "status": "plan_only_no_archive_was_downloaded_opened_or_parsed",
+  "contract_relative_path": "contract.json",
+  "venue": "Binance USD-M Futures public archive",
+  "datasets": [
+    {
+      "name": "klines",
+      "interval": "1m"
+    },
+    {
+      "name": "fundingRate"
+    }
+  ],
+  "first_archive_month": "2024-03",
+  "last_archive_month": "2026-06",
+  "month_count": 28,
+  "symbol_count": 24,
+  "dataset_symbol_month_requests": 1344,
+  "symbols_in_order": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "BNBUSDT",
+    "XRPUSDT",
+    "ADAUSDT",
+    "DOGEUSDT",
+    "DOTUSDT",
+    "LTCUSDT",
+    "LINKUSDT",
+    "SOLUSDT",
+    "EOSUSDT",
+    "MATICUSDT",
+    "ETCUSDT",
+    "FILUSDT",
+    "BCHUSDT",
+    "AVAXUSDT",
+    "UNIUSDT",
+    "AAVEUSDT",
+    "SUSHIUSDT",
+    "XLMUSDT",
+    "TRXUSDT",
+    "THETAUSDT",
+    "VETUSDT",
+    "AXSUSDT"
+  ],
+  "roles": {
+    "formation_and_warmup": "2024-03-01T00:00:00Z through 2025-07-31T23:59:59.999999999Z, with each refit consuming only its frozen 365-day training, 90-day validation, two one-hour purges, 168-hour endpoint history, and causal 720-hour hedge/risk history",
+    "confirmation_decisions": "2025-08-01T00:00:00Z through 2026-06-30T22:00:00Z",
+    "terminal_execution": "2026-06-30T23:00:00Z is an observed June open used only as a zero-target liquidation boundary; no July 2026 archive, open, funding event, decision, or return may be requested"
+  },
+  "warmup_proof_required_before_preparation": {
+    "earliest_refit": "2025-08-01T00:00:00Z",
+    "training_days": 365,
+    "validation_days": 90,
+    "purge_hours_between_train_validation": 1,
+    "purge_hours_between_validation_test": 1,
+    "additional_causal_history_hours_available_before_earliest_training_window": 1510,
+    "rule": "the preparation receipt must recompute and record the exact first training, validation, test, endpoint-history, hedge-history, and risk-history timestamps; any insufficiency hard-fails"
+  },
+  "archive_rules": {
+    "official_sha256_sidecar_required": true,
+    "explicit_request_inventory_only": true,
+    "directory_scanning_or_globbing": false,
+    "missing_remote_404": "record and mask; never substitute",
+    "price_fill": "none",
+    "symbol_splicing": false,
+    "replacement_symbol": false,
+    "july_2026_or_later_path_count": 0
+  },
+  "separation": {
+    "forecast_stage_input": "one blinded fold artifact per refit and representation; contains train/validation labels and causal histories available before each test decision, but no same-decision forward cashflow label, next-boundary funding, cost, IC, or portfolio outcome array",
+    "evaluation_stage_input": "separate content-addressed economic/execution payload; it is not passed to the training process and cannot be opened until the 32-artifact all-fold forecast seal verifies",
+    "preparation_adapter_status": "implemented_by_prepare_confirmation.py_and_source_frozen",
+    "development_overlap_receipt_required_before_acquisition": true
+  }
+}

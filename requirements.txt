@@ -1,0 +1,8 @@
+# Portable test and development environment.
+numpy>=2.0,<3
+pandas>=2.2,<3
+pyarrow>=16,<18
+scikit-learn>=1.5,<2
+torch>=2.10,<3
+iisignature==0.24
+pytest>=7.4,<9

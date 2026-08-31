@@ -1,0 +1,37 @@
+{
+  "universe": {
+    "venue": "Binance USD-M Futures",
+    "formation_interval": "[2021-01-01T00:00:00Z,2022-01-01T00:00:00Z)",
+    "selection_rule": "Top 24 plain-USDT contracts with a complete formation-period calendar, ranked by median daily quote volume",
+    "static_symbols_in_rank_order": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "BNBUSDT",
+      "XRPUSDT",
+      "ADAUSDT",
+      "DOGEUSDT",
+      "DOTUSDT",
+      "LTCUSDT",
+      "LINKUSDT",
+      "SOLUSDT",
+      "EOSUSDT",
+      "MATICUSDT",
+      "ETCUSDT",
+      "FILUSDT",
+      "BCHUSDT",
+      "AVAXUSDT",
+      "UNIUSDT",
+      "AAVEUSDT",
+      "SUSHIUSDT",
+      "XLMUSDT",
+      "TRXUSDT",
+      "THETAUSDT",
+      "VETUSDT",
+      "AXSUSDT"
+    ],
+    "candidate_pair_count": 276,
+    "pair_orientation": "Within each rank-ordered combination, the lower-liquidity leg is the signal leg and the higher-liquidity leg is the hedge leg",
+    "replacement_rule": "Never replace a formed symbol",
+    "symbol_splicing": false
+  }
+}

@@ -1,0 +1,276 @@
+{
+  "contract_name": "pairtoken_native_1m_itransformer_one_shot_confirmation",
+  "contract_version": 1,
+  "status": "frozen_before_any_confirmation_outcome_or_metric_is_opened",
+  "claim_boundary": {
+    "sample_role": "one_shot_chronological_confirmation",
+    "research_question": "Does the frozen native one-minute pair-token iTransformer retain positive and superior out-of-sample portfolio performance relative to its matched causal fifteen-minute control on the previously unopened August 2025 through June 2026 interval?",
+    "primary_model": "N02_native_1m_itransformer_seed_mean",
+    "paired_control": "C02_causal_15m_itransformer_seed_mean",
+    "no_model_selection_inside_confirmation": true,
+    "not_authorized": [
+      "changing the universe, pair axis, features, architecture, seeds, training rule, ranking map, risk engine, funding treatment, costs, refit dates, or evaluation interval after outcomes are opened",
+      "selecting a seed or refit by confirmation performance",
+      "computing confirmation IC, returns, turnover, costs, Sharpe, drawdown, attribution, or any other outcome before every required forecast is registered and sealed",
+      "calling the development runner or development evaluator directly because both are outcome-coupled and hard-bound to the June 2025 development firewall",
+      "claiming realized HFT attainability from gross or fixed-cost simulations"
+    ]
+  },
+  "pre_confirmation_validation": {
+    "required_before_network_acquisition": true,
+    "development_interval_end_inclusive_utc": "2025-06-30T23:00:00Z",
+    "confirmation_rows_parsed": false,
+    "exact_parent_parity_required_for": [
+      "economic weights, cashflow labels, and availability masks",
+      "factorized components and native/control model inputs",
+      "causal beta and covariance tensors",
+      "fixed-quantity risk-constrained ledger"
+    ],
+    "maximum_permitted_numeric_difference": 0.0,
+    "acquisition_must_embed_receipt": true
+  },
+  "confirmation_interval": {
+    "start_inclusive_utc": "2025-08-01T00:00:00Z",
+    "end_exclusive_utc": "2026-06-30T23:00:00Z",
+    "expected_decision_hours": 8015,
+    "terminal_execution_boundary_utc": "2026-06-30T23:00:00Z",
+    "terminal_execution_rule": "the final forecast decision is 2026-06-30 22:00 UTC; append a zero-pair-target row at the fully observed 23:00 UTC open, book any funding owed by the carried position at that boundary, close all coins there, and earn no return after the terminal row"
+  },
+  "refits": [
+    {
+      "name": "R1_2025_08_01",
+      "refit_at_utc": "2025-08-01T00:00:00Z",
+      "test_start": "2025-08-01T00:00:00Z",
+      "test_end_exclusive": "2025-10-01T00:00:00Z",
+      "expected_test_hours": 1464
+    },
+    {
+      "name": "R2_2025_10_01",
+      "refit_at_utc": "2025-10-01T00:00:00Z",
+      "test_start": "2025-10-01T00:00:00Z",
+      "test_end_exclusive": "2026-01-01T00:00:00Z",
+      "expected_test_hours": 2208
+    },
+    {
+      "name": "R3_2026_01_01",
+      "refit_at_utc": "2026-01-01T00:00:00Z",
+      "test_start": "2026-01-01T00:00:00Z",
+      "test_end_exclusive": "2026-04-01T00:00:00Z",
+      "expected_test_hours": 2160
+    },
+    {
+      "name": "R4_2026_04_01",
+      "refit_at_utc": "2026-04-01T00:00:00Z",
+      "test_start": "2026-04-01T00:00:00Z",
+      "test_end_exclusive": "2026-06-30T23:00:00Z",
+      "expected_test_hours": 2183
+    }
+  ],
+  "frozen_parent": {
+    "paired_contract_relative_path": "../development/contract.json",
+    "paired_contract_sha256": "dbdc60b9f49e69e33bdadb020699aecb594f09b355d8ab7035eba05cdb8f26a3",
+    "paired_core_relative_path": "../development/paired_neural_core.py",
+    "paired_core_sha256": "b138bfbd5124e2755c93b0fe7a28a562765ea2b187c89f7adc3394b1e590a2b9",
+    "paired_models_relative_path": "../development/paired_neural_models.py",
+    "paired_models_sha256": "20270c2a9757493e60c94947f04b8c4779ef7ace4c624041a71b9f0df095b1b0",
+    "development_runner_relative_path": "../development/run_paired_neural.py",
+    "development_runner_sha256": "c0f0148b913c4059aa2fc74ce6efb846b35f448bde87d28e244d3b0e5cc1fc93",
+    "development_evaluator_relative_path": "../development/portfolio_evaluation.py",
+    "development_evaluator_sha256": "6e8aa4a81d6dc4725d0a629f3f0871d24482b22de4472e1338cf3b781df4fc68",
+    "cycle_model_relative_path": "../model/pairtoken_model.py",
+    "cycle_model_sha256": "649846a74e14058d9e764ccea1de482edad57087053c59aed8b1066fd05c4da7",
+    "raw_4h_contract_relative_path": "../contracts/universe.json",
+    "raw_4h_contract_sha256": "45727a9548600a0f259701a53ab1880106359322a2470ddc176054ad98b021b1",
+    "reused_executable_components": [
+      "MaterializedPanel",
+      "fit_itransformer",
+      "transformer_config",
+      "mean_seed_predictions",
+      "PairTokenITransformer",
+      "FeatureScaler",
+      "masked_smooth_l1",
+      "rank_pair_targets"
+    ],
+    "explicitly_not_called": [
+      "run_paired_neural.train_full",
+      "portfolio_evaluation.evaluate"
+    ]
+  },
+  "data": {
+    "venue": "Binance USD-M Futures public archive",
+    "bar_interval_minutes": 1,
+    "forecast_and_rebalance_interval_minutes": 60,
+    "universe_rule": "unchanged static 2021 Top-24 axis from the frozen parent",
+    "symbols_in_order": [
+      "BTCUSDT",
+      "ETHUSDT",
+      "BNBUSDT",
+      "XRPUSDT",
+      "ADAUSDT",
+      "DOGEUSDT",
+      "DOTUSDT",
+      "LTCUSDT",
+      "LINKUSDT",
+      "SOLUSDT",
+      "EOSUSDT",
+      "MATICUSDT",
+      "ETCUSDT",
+      "FILUSDT",
+      "BCHUSDT",
+      "AVAXUSDT",
+      "UNIUSDT",
+      "AAVEUSDT",
+      "SUSHIUSDT",
+      "XLMUSDT",
+      "TRXUSDT",
+      "THETAUSDT",
+      "VETUSDT",
+      "AXSUSDT"
+    ],
+    "oriented_pair_count": 276,
+    "symbol_splicing": false,
+    "replacement_symbols": false,
+    "price_fill": "none",
+    "unavailable_or_delisted_contract_policy": "mask the affected coin and every incident pair; never replace or splice",
+    "required_datasets": [
+      "one-minute klines",
+      "realized funding rates"
+    ],
+    "formation_archive_start_month": "2024-03",
+    "last_full_decision_month": "2026-06",
+    "terminal_boundary_requirement": "no July 2026 archive or outcome is permitted; the last model decision is 2026-06-30 22:00 UTC and the already observed 2026-06-30 23:00 UTC June open is a zero-target liquidation boundary, not a prediction row",
+    "acquisition_and_parsing_separation": "acquisition may download allowlisted files, but the preparation adapter must hard-slice formation, decision, and terminal-boundary roles before producing separated training/planning and evaluation artifacts"
+  },
+  "representations": {
+    "N02_native_1m": {
+      "path_coordinates": 60,
+      "rule": "the previous complete hour's sixty pair-residual one-minute increments in chronological order under the hedge weight in force at the start of that completed hour"
+    },
+    "C02_causal_15m_control": {
+      "path_coordinates": 60,
+      "rule": "within each of four consecutive fifteen-minute blocks, replace every increment by that block's sum divided by fifteen",
+      "preserves": [
+        "all four fifteen-minute endpoints",
+        "the hourly endpoint",
+        "the sample clock",
+        "missingness",
+        "causal hedge weights"
+      ]
+    },
+    "common_tail": {
+      "hourly_endpoint_history": 168,
+      "causal_pair_weights": 2,
+      "utc_time_coordinates": 2,
+      "total_raw_dimension": 232,
+      "auxiliary_dimension": 84,
+      "auxiliary_values": "all zeros"
+    }
+  },
+  "target": {
+    "horizon_hours": 1,
+    "definition": "exact next-hour fixed-quantity pair cashflow including next-boundary funding and excluding carried funding at the decision boundary",
+    "formula": "sum_l w[t,l]*r[t,l] - sum_l w[t,l]*(1+r[t,l])*funding[t+1,l]",
+    "hedge_lookback_hours": 720,
+    "minimum_complete_hedge_hours": 168,
+    "one_full_hour_lag": true,
+    "beta_clip": [-3.0, 3.0],
+    "pair_gross_normalization": 1.0
+  },
+  "walk_forward": {
+    "training_days": 365,
+    "validation_days": 90,
+    "target_purge_hours_between_train_and_validation": 1,
+    "target_purge_hours_between_validation_and_test": 1,
+    "scalers_fit_on_training_only": true,
+    "same_decision_forward_targets_absent_from_forecast_stage_artifacts": true,
+    "causal_test_history_rule": "a later test decision may use paths realized before that decision; these causally revealed histories are features, not same-decision forward labels"
+  },
+  "model": {
+    "architecture": "frozen pair-token iTransformer",
+    "d_model": 48,
+    "attention_heads": 4,
+    "encoder_layers": 1,
+    "feedforward_dimension": 96,
+    "dropout": 0.1,
+    "fixed_seeds": [1701, 1702, 1703],
+    "seed_aggregation": "arithmetic mean of all three forecasts; never select a seed",
+    "loss": "masked Smooth-L1 next-hour cashflow forecast loss",
+    "optimizer": "AdamW",
+    "learning_rate": 0.0008,
+    "weight_decay": 0.0001,
+    "batch_size": 32,
+    "maximum_epochs": 18,
+    "early_stopping_patience": 4,
+    "minimum_improvement": 0.000001
+  },
+  "portfolio": {
+    "mapping": "frozen parent rank_pair_targets after the three-seed arithmetic mean",
+    "long_pairs": 8,
+    "short_pairs": 8,
+    "absolute_pair_target": 0.05,
+    "stable_tie_break": "2021 rank-combination pair order",
+    "flat_if_fewer_than_16_eligible_pairs": true,
+    "pair_targets_netted_to_coins_before_constraints_and_costs": true,
+    "maximum_total_gross": 1.0,
+    "maximum_absolute_coin_weight": 0.15,
+    "maximum_absolute_dollar_net": 0.02,
+    "maximum_absolute_btc_beta": 0.05,
+    "target_annualized_volatility": 0.1,
+    "risk_covariance_lookback_days": 60,
+    "risk_minimum_complete_hourly_observations": 720,
+    "annualization_days": 365,
+    "cost_bps": [0.0, 0.5, 1.5, 5.0],
+    "primary_cost_bps": 0.5,
+    "stress_cost_bps": 1.5,
+    "funding": "realized Binance funding cashflows at governed boundaries are included",
+    "transaction_cost_formula": "one-way cost equals cost_bps times traded gross divided by 10000 at every hourly action, including entry, rebalancing, and terminal liquidation"
+  },
+  "forecast_separation": {
+    "forecast_input_schema": "pairtoken_1m_confirmation_blinded_fold_v1",
+    "forecast_artifact_schema": "pairtoken_1m_confirmation_forecast_v1",
+    "forecast_registry_schema": "pairtoken_1m_confirmation_registry_entry_v1",
+    "forecast_seal_schema": "pairtoken_1m_confirmation_all_fold_seal_v1",
+    "required_individual_forecasts": 24,
+    "required_seed_mean_forecasts": 8,
+    "required_total_forecast_artifacts": 32,
+    "runtime_manifest_required_and_sealed": true,
+    "blinded_input_hashes_bound_into_evaluation_manifest": true,
+    "forecast_stage_forbidden_members": [
+      "test_target_cashflows",
+      "test_target_available",
+      "same_decision_forward_returns",
+      "same_decision_forward_funding",
+      "test_costs",
+      "test_ic",
+      "test_portfolio_metrics"
+    ],
+    "evaluation_rule": "the evaluator validates the complete all-fold seal before it opens or parses the separately hashed evaluation payload",
+    "causal_feature_disclosure": "factorized forecast inputs contain only histories available by each decision, including paths realized earlier inside the confirmation period; they contain no same-decision forward target cashflow, next-boundary funding, cost, IC, or portfolio outcome array"
+  },
+  "reporting": {
+    "primary_estimand": "N02 minus C02 paired daily portfolio-return difference at 0.5 bp",
+    "primary_model_metric": "N02 annualized Sharpe at 0.5 bp",
+    "paired_inference": {
+      "method": "moving-block bootstrap of the paired daily N02-minus-C02 return difference",
+      "block_length_days": 7,
+      "replications": 10000,
+      "fixed_seed": "0x13527D8",
+      "primary_bound": "one-sided 90 percent lower confidence bound"
+    },
+    "mandatory_metrics": [
+      "gross and net total return",
+      "annualized return",
+      "annualized volatility",
+      "Sharpe at every frozen cost",
+      "maximum drawdown",
+      "daily turnover",
+      "break-even cost",
+      "constraint violations",
+      "hourly gross, net, beta, volatility, effective-count and concentration audits",
+      "refit-level performance",
+      "paired daily differences and fixed-seed seven-day moving-block bootstrap",
+      "coin and period attribution"
+    ],
+    "mandatory_disclosure": "the 2023-2024 Sharpe 2.798 was development evidence used to select N02 and is not part of this confirmation sample"
+  }
+}

@@ -1,0 +1,274 @@
+{
+  "contract_name": "paired_native_1m_vs_causal_15m_neural_development",
+  "contract_version": 2,
+  "status": "frozen_v2_development_experiment_before_any_economic_target_fit",
+  "claim_boundary": {
+    "sample_role": "exploratory_development_comparison",
+    "research_question": "Does the native one-minute path add forecast and portfolio information beyond a causal representation that retains the same four fifteen-minute endpoint changes when every other model and portfolio choice is held fixed?",
+    "not_confirmatory": true,
+    "not_authorized": [
+      "calling any reused quarter chronologically prospective out of sample",
+      "claiming a Signature effect",
+      "selecting the best random seed",
+      "opening or reading any raw archive month after 2025-06",
+      "evaluating the still outcome-unopened August 2025 to June 2026 interval",
+      "claiming HFT attainability from a fixed transaction-cost assumption"
+    ]
+  },
+  "frozen_parent": {
+    "raw_4h_contract_relative_path": "../contracts/universe.json",
+    "raw_4h_contract_sha256": "45727a9548600a0f259701a53ab1880106359322a2470ddc176054ad98b021b1",
+    "cycle_model_relative_path": "../model/pairtoken_model.py",
+    "cycle_model_sha256": "649846a74e14058d9e764ccea1de482edad57087053c59aed8b1066fd05c4da7",
+    "reused_components": [
+      "FeatureScaler",
+      "TransformerConfig",
+      "PairTokenITransformer",
+      "masked_smooth_l1",
+      "set_reproducible_seed",
+      "rank_pair_targets"
+    ]
+  },
+  "data": {
+    "venue": "Binance USD-M Futures public monthly archive",
+    "bar_interval_minutes": 1,
+    "forecast_and_rebalance_interval_minutes": 60,
+    "first_allowed_archive_month": "2021-01",
+    "last_allowed_archive_month": "2025-06",
+    "hard_cutoff_exclusive_utc": "2025-07-01T00:00:00Z",
+    "archive_access_rule": "construct each allowed path explicitly; never scan the raw archive tree",
+    "required_acquisition_manifest_directory_name": "top24_1m_dev_202101_202506_v1",
+    "required_acquisition_manifest_schema": "top24_binance_1m_development_acquisition_v1",
+    "acquisition_manifest_sha256": "834381f115bbd56ae03904a2cd9f2d1efea84d350a977101b63ba76181507d22",
+    "archive_availability_sha256": "02161a2224ee25646e034d1d9bd4a64f3f9c43af960570ba2e55cea7503f5671",
+    "artifact_hashes_sha256": "bf45f031b63c03506008f91fcaeeb636bea4a44f41ce2461877e383009ee5d91",
+    "archive_request_count": 2592,
+    "available_verified_count": 2582,
+    "missing_remote_404_count": 10,
+    "manifest_availability_rule": "open only rows declared available_verified; materialize only manifest-declared missing_remote_404 months as all-missing; reject every undeclared missing or corrupt archive",
+    "official_sha256_sidecar_required": true,
+    "price_fill": "none",
+    "symbol_splicing": false,
+    "universe": "the unchanged static Top-24 and 276 oriented pairs frozen in the parent raw-4h contract",
+    "transient_open_gap_policy": {
+      "rule": "no_fill_no_shortening_mask_outcome_only",
+      "expected_coin_gap_cells": 16,
+      "expected_pair_label_cells_masked": 312,
+      "expected_events": [
+        {
+          "decision_timestamp": "2022-02-25T23:00:00+00:00",
+          "missing_next_open_timestamp": "2022-02-26T00:00:00+00:00",
+          "symbols": ["XRPUSDT", "LTCUSDT", "SOLUSDT", "FILUSDT", "SUSHIUSDT", "XLMUSDT", "TRXUSDT", "VETUSDT"]
+        },
+        {
+          "decision_timestamp": "2022-03-31T23:00:00+00:00",
+          "missing_next_open_timestamp": "2022-04-01T00:00:00+00:00",
+          "symbols": ["XRPUSDT", "LTCUSDT", "SOLUSDT", "FILUSDT", "SUSHIUSDT", "XLMUSDT", "TRXUSDT", "VETUSDT"]
+        }
+      ],
+      "maximum_oos_coin_gap_cells": 0,
+      "maximum_oos_pair_label_cells": 0
+    }
+  },
+  "representations": {
+    "native_1m": {
+      "path_coordinates": 60,
+      "rule": "the previous complete hour's sixty pair-residual one-minute increments in chronological order, formed with the pair weight in force at the start of that completed hour"
+    },
+    "causal_15m_control": {
+      "path_coordinates": 60,
+      "rule": "within each of the four consecutive fifteen-minute blocks, replace all increments by the block sum divided by fifteen",
+      "preserved": [
+        "each fifteen-minute endpoint",
+        "the full-hour endpoint",
+        "the sample clock",
+        "missingness",
+        "the causal hedge weights"
+      ],
+      "destroyed": "within-block path variation, including ordering and dispersion"
+    },
+    "common_tail": {
+      "hourly_endpoint_history": 168,
+      "causal_pair_weights": 2,
+      "utc_time_coordinates": 2,
+      "total_raw_dimension": 232
+    }
+  },
+  "target": {
+    "horizon_hours": 1,
+    "definition": "at decision timestamp t, exact fixed-quantity pair cashflow from open t to next open t+1 (or the source terminal close), under w[t], excluding carried funding[t] and including next-boundary funding[t+1] on the grown fixed quantity",
+    "formula": "sum_l w[t,l]*r[t,l] - sum_l w[t,l]*(1+r[t,l])*funding[t+1,l]",
+    "feature_information_cutoff": "the within-hour path is [t-1h,t) under w[t-1], the 168 endpoint episodes are strictly before t and use their episode-start weights w[s], and current w[t] is a common-tail feature",
+    "availability_separation": "feature_available[t] uses only prior paths/history and current decision availability; only label_mask intersects future pair_target_available[t]",
+    "economic_input_artifact": {
+      "metadata_schema": "paired_hourly_economic_inputs_v2",
+      "manifest_schema": "paired_hourly_economic_inputs_manifest_v2",
+      "component_adapter": "exact values and mask from the content-addressed evaluator artifact; no rebuild and no compatibility fallback",
+      "required_identity_tests": [
+        "ordinary interval with next-boundary funding",
+        "ordinary interval without a funding event",
+        "source-terminal liquidation mark",
+        "multi-period changing-action ledger path with terminal zero-target row"
+      ]
+    },
+    "hedge_estimation": {
+      "lookback_hours": 720,
+      "minimum_complete_hours": 168,
+      "one_full_hour_lag": true,
+      "beta_clip": [-3.0, 3.0],
+      "pair_gross_normalization": 1.0
+    }
+  },
+  "folds": [
+    {"name": "2023Q2", "test_start": "2023-04-01T00:00:00Z", "test_end_exclusive": "2023-07-01T00:00:00Z"},
+    {"name": "2023Q3", "test_start": "2023-07-01T00:00:00Z", "test_end_exclusive": "2023-10-01T00:00:00Z"},
+    {"name": "2023Q4", "test_start": "2023-10-01T00:00:00Z", "test_end_exclusive": "2024-01-01T00:00:00Z"},
+    {"name": "2024Q2", "test_start": "2024-04-01T00:00:00Z", "test_end_exclusive": "2024-07-01T00:00:00Z"},
+    {"name": "2024Q3", "test_start": "2024-07-01T00:00:00Z", "test_end_exclusive": "2024-10-01T00:00:00Z"},
+    {"name": "2024Q4", "test_start": "2024-10-01T00:00:00Z", "test_end_exclusive": "2025-01-01T00:00:00Z"}
+  ],
+  "walk_forward": {
+    "training_days": 365,
+    "validation_days": 90,
+    "target_purge_hours": 1,
+    "scalers_fit_on_training_only": true
+  },
+  "candidate_budget": {
+    "maximum_unique_strategy_return_series": 5,
+    "maximum_full_model_fits": 78,
+    "series": [
+      "B00_endpoint_ridge_shared",
+      "N01_native_1m_lstm_seed_mean",
+      "C01_causal_15m_lstm_seed_mean",
+      "N02_native_1m_itransformer_seed_mean",
+      "C02_causal_15m_itransformer_seed_mean"
+    ],
+    "fit_count_formula": "6 folds * (1 shared ridge + 2 representations * 2 neural architectures * 3 fixed seeds) = 78",
+    "engineering_benchmark": "one separately declared and discarded 2023Q2/native_1m/iTransformer/seed-1701 fit; excluded from all forecasts, ICs, portfolio results and the 78 scientific fits",
+    "no_unregistered_variants": true
+  },
+  "models": {
+    "endpoint_ridge": {
+      "role": "shared endpoint-only benchmark",
+      "features": "the common 168-hour endpoint history, pair weights and time coordinates only",
+      "ridge_penalty": 10.0,
+      "seeded": false
+    },
+    "lstm": {
+      "path_input_size": 1,
+      "path_hidden_size": 16,
+      "path_layers": 1,
+      "common_tail_projection": 32,
+      "dropout": 0.0
+    },
+    "itransformer": {
+      "implementation": "frozen parent PairTokenITransformer",
+      "d_model": 48,
+      "attention_heads": 4,
+      "encoder_layers": 1,
+      "feedforward_dimension": 96,
+      "dropout": 0.1
+    },
+    "common_training": {
+      "fixed_seeds": [1701, 1702, 1703],
+      "seed_aggregation": "arithmetic mean of all three predictions; never select a seed",
+      "loss": "masked Smooth-L1 next-hour cashflow forecast loss",
+      "optimizer": "AdamW",
+      "learning_rate": 0.0008,
+      "weight_decay": 0.0001,
+      "batch_size": 32,
+      "maximum_epochs": 18,
+      "early_stopping_patience": 4,
+      "minimum_improvement": 0.000001,
+      "cost_aware_training_objective": false,
+      "reason_cost_not_in_training": "the existing audited infrastructure safely supports a forecast objective; costs and turnover are imposed in the identical downstream ledger so representation is the only experimental change"
+    }
+  },
+  "portfolio": {
+    "mapping": "fixed parent rank_pair_targets after the three-seed prediction mean",
+    "long_pairs": 8,
+    "short_pairs": 8,
+    "absolute_pair_target": 0.05,
+    "pair_targets_netted_to_coins_before_constraints": true,
+    "maximum_total_gross": 1.0,
+    "maximum_absolute_coin_weight": 0.15,
+    "maximum_absolute_dollar_net": 0.02,
+    "maximum_absolute_btc_beta": 0.05,
+    "target_annualized_volatility": 0.1,
+    "cost_bps": [0.0, 0.5, 1.5, 5.0],
+    "primary_cost_bps": 0.5,
+    "stress_cost_bps": 1.5,
+    "same_engine_and_inputs_for_every_representation_and_model": true
+  },
+  "primary_comparison": {
+    "architecture": "itransformer",
+    "contrast": "native_1m minus causal_15m_control",
+    "forecast_metric": "decision-level cross-sectional Spearman IC",
+    "portfolio_metric": "paired daily net return and annualized Sharpe at 0.5 bp",
+    "promotion_gates": [
+      "native-minus-control mean IC is positive in at least four of six folds",
+      "the one-sided 90% moving-block-bootstrap lower bound of the paired daily net-return difference is above zero",
+      "native 0.5 bp Sharpe exceeds control by at least 0.15",
+      "native Sharpe is positive at 1.5 bp and linearized break-even cost is at least 1.5 bp",
+      "zero portfolio-constraint violations",
+      "the result is not driven by one quarter or one coin"
+    ],
+    "supporting_comparison": "the identically specified LSTM contrast is reported but cannot replace the primary iTransformer contrast"
+  },
+  "required_outputs": {
+    "schemas": {
+      "components": "paired_1m_factorized_components_v2",
+      "forecast": "paired_neural_forecast_v2",
+      "forecast_run_manifest": "paired_neural_forecast_run_manifest_v2"
+    },
+    "prerequisite_stage": [
+      "paired_hourly_economic_inputs_v2.npz",
+      "paired_hourly_economic_inputs_v2.manifest.json"
+    ],
+    "preparation_stage": [
+      "factorized_components_v2.npz",
+      "factorized_components_v2.receipt.json"
+    ],
+    "forecast_stage": [
+      "run_manifest.json",
+      "attempt_ledger.csv",
+      "forecast_manifest.csv",
+      "seed_metrics.csv",
+      "fold_metrics.csv",
+      "ic_by_decision.csv",
+      "forecasts/<fold>/<representation>__<model>__<seed>.npz",
+      "forecasts/<fold>/<representation>__<model>_seed_mean__seed-all3.npz"
+    ],
+    "portfolio_stage_existing_audited_backend": [
+      "portfolio_daily_returns.csv",
+      "portfolio_metrics.csv",
+      "paired_differences.csv",
+      "gate_report.json",
+      "completion_receipt.json"
+    ],
+    "stage_boundary": "this package emits fixed pair targets; only the existing audited multicoin pair ledger may produce the portfolio-stage files"
+  },
+  "integrity": {
+    "source_binding": "contract, core, models, runner, frozen parent model and frozen parent contract are content-hashed; the three local source hashes are also explicit in every forecast identity",
+    "runtime_binding": "Python, NumPy, pandas, Torch/CUDA, device/GPU and deterministic-runtime settings are canonically hashed in every forecast identity",
+    "resume_rule": "an existing forecast is accepted only after exact identity, axis, finite-mask and governed target-rebuild validation; stale or swapped artifacts hard-fail",
+    "immutability": "v2 components, summaries and completion manifests are create-only"
+  },
+  "engineering_benchmark": {
+    "required_before_scientific_training": true,
+    "fold": "2023Q2",
+    "representation": "native_1m",
+    "model": "itransformer",
+    "seed": 1701,
+    "artifact_role": "runtime_and_peak-memory_receipt_only",
+    "must_not_store": ["predictions", "pair_targets", "IC", "loss", "portfolio_returns", "performance_metrics"],
+    "discard_after_fit": true
+  },
+  "stopping_rule": {
+    "run_exactly_the_declared_family": true,
+    "do_not_add_hyperparameters_after_results": true,
+    "sharpe_above_two_is_not_a_stopping_rule": true,
+    "after_failure": "record the failure; any new family requires a new append-only candidate entry and remains exploratory",
+    "confirmation": "requires a separately frozen contract and explicit user authorization"
+  }
+}
